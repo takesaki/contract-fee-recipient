@@ -35,7 +35,12 @@ const modal = createWeb3Modal({
   chains: [testnet],
   projectId,
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
-  enableOnramp: true // Optional - false as default
+  enableOnramp: true, // Optional - false as default
+  featuredWalletIds: [
+    'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
+    '5864e2ced7c293ed18ac35e0db085c09ed567d67346ccb6f58a0327a75137489',
+  ],
+  allWallets: 'HIDE'
 })
 ///////////////////////
 

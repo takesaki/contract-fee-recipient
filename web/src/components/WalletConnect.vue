@@ -24,25 +24,32 @@ onMounted(() => {
 });
 
 const init = async () => {
-  console.log('init');
   ownerAddress.value = await contractwc.getOwner();
-  contractAmount.value = await contractwc.getBalanceString();
-  transferAmount.value = contractAmount.value;
-  console.log('contractAmount', await contractwc.getBalanceString());
+  loadBalance(); 
 }
 
 watchEffect(async () => {
   canTransfer.value = false;
-  if(isConnected.value) {
-    if(address.value == ownerAddress.value){
+  if (
+    isConnected.value &&
+    address.value == ownerAddress.value &&
+    contractAmount.value > 0 &&
+    toAddress.value.length == 42
+  ) {
       canTransfer.value = true;
-    }
   }
 });
 
-
 const showDialog = () => {
   dialog.value = true;
+}
+
+const loadBalance = async() => {
+  contractAmount.value = Number(await contractwc.getBalanceString());
+  transferAmount.value = 0;
+  if (contractAmount.value < 0.01) {
+    transferAmount.value = contractAmount.value;
+  }
 }
 
 const transfer = async() => {
@@ -50,6 +57,7 @@ const transfer = async() => {
   const contract = await getContract();  
   contract.sendEth(toAddress.value, ethers.parseEther(transferAmount.value.toString())).then((result) => {
     console.dir(result);
+    loadBalance();
   })
   
   dialog.value = false;
@@ -78,6 +86,12 @@ const getContract = async() => {
         <w3m-button />
       </v-col>
     </v-row>
+    <v-row no-gutters align="center" justify="center">
+      <v-col cols="auto">
+        <span v-show="contractAmount > 0">MAX {{ contractAmount }} ETH can be transferred.</span>
+        <span v-show="contractAmount == 0">No Rewards for transfer.</span>
+      </v-col>
+    </v-row>
     <v-row align="center" justify="center">
       <v-col cols="12">
         <v-slider
@@ -89,14 +103,21 @@ const getContract = async() => {
         ></v-slider>
       </v-col>
     </v-row>
-    <v-row no-gutters align="center" justify="center">
-      <v-spacer></v-spacer>
-      <v-col cols="2">
+    <v-row align="center" no-guttersjustify="center" >
+      <v-col cols="10">
         <span class="text-h4">{{ transferAmount }}</span> ETH
       </v-col>
-      <v-col cols="1">
-        <v-icon>mdi-arrow-right-bold-outline</v-icon>
+      <v-spacer></v-spacer>
+      <v-col cols="2">
+        <v-btn variant="outlined" @click="loadBalance"><v-icon>mdi-reload</v-icon></v-btn>
       </v-col>
+    </v-row>
+    <v-row align="center">
+      <!--
+      <v-col cols="1">
+        
+      </v-col>
+      -->
       <v-col cols="9">
         <v-text-field
         v-model="toAddress"
@@ -104,12 +125,15 @@ const getContract = async() => {
         label="To Address"
         ></v-text-field>
       </v-col>
-    </v-row>
-    <v-row>
       <v-col cols="3">
         <v-btn variant="outlined" :disabled="!canTransfer" @click="showDialog" append-icon="mdi-logout">Transfer</v-btn>
       </v-col>
       <v-spacer></v-spacer>
+    </v-row>
+    <v-row align="center" justify="center">
+      <v-col cols="auto">
+        <a target="_blank" :href="'https://holesky.etherscan.io/address/' + contractwc.CONTRACT_ADDRESS + '#mine'">The contract on Etherscan.</a>
+      </v-col>
     </v-row>
   </v-container>
   <v-dialog v-model="dialog" width="auto">

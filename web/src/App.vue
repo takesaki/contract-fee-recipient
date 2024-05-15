@@ -70,10 +70,10 @@ header {
 
 .logo {
   display: block;
-  margin: 0 auto 2rem;
+  margin: 0 auto 1rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   header {
     display: flex;
     place-items: center;
@@ -81,7 +81,7 @@ header {
   }
 
   .logo {
-    margin: 0 2rem 0 0;
+    margin: 0 1rem 0 0;
   }
 
   header .wrapper {

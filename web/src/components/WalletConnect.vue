@@ -132,7 +132,7 @@ const getContract = async() => {
     </v-row>
     <v-row align="center" justify="center">
       <v-col cols="auto">
-        <a target="_blank" :href="'https://holesky.etherscan.io/address/' + contractwc.CONTRACT_ADDRESS + '#mine'">The contract on Etherscan.</a>
+        <a target="etherscan" :href="'https://holesky.etherscan.io/address/' + contractwc.CONTRACT_ADDRESS + '#mine'">The contract on Etherscan.</a>
       </v-col>
     </v-row>
   </v-container>

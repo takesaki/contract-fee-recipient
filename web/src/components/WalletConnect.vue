@@ -12,8 +12,8 @@ const { walletProvider, walletProviderType } = useWeb3ModalProvider()
 let symbol = ref('ETH');
 
 let message = ref('Connect with WalletConnect.');
-let transferAmount = ref(0);
-let contractAmount = ref(0);
+let transferAmount = ref('0');
+let contractAmount = ref('0');
 let toAddress = ref(import.meta.env.VITE_DEFAULT_TO_ADDRESS);
 let dialog = ref(false);
 let canTransfer = ref(false);
@@ -28,12 +28,19 @@ const init = async () => {
   loadBalance(); 
 }
 
+watch(transferAmount, () => {
+  if (Number(transferAmount.value) > Number(contractAmount.value)) {
+    transferAmount.value = contractAmount.value;
+  }
+    
+});
+
 watchEffect(async () => {
   canTransfer.value = false;
   if (
     isConnected.value &&
     address.value == ownerAddress.value &&
-    contractAmount.value > 0 &&
+    Number(contractAmount.value) > 0 &&
     toAddress.value.length == 42
   ) {
       canTransfer.value = true;
@@ -45,9 +52,9 @@ const showDialog = () => {
 }
 
 const loadBalance = async() => {
-  contractAmount.value = Number(await contractwc.getBalanceString());
-  transferAmount.value = 0;
-  if (contractAmount.value < 0.01) {
+  contractAmount.value = await contractwc.getBalanceString();
+  transferAmount.value = '0';
+  if (Number(contractAmount.value) < 0.01) {
     transferAmount.value = contractAmount.value;
   }
 }
@@ -55,7 +62,7 @@ const loadBalance = async() => {
 const transfer = async() => {
 
   const contract = await getContract();  
-  contract.sendEth(toAddress.value, ethers.parseEther(transferAmount.value.toString())).then((result) => {
+  contract.sendEth(toAddress.value, ethers.parseEther(transferAmount.value)).then((result) => {
     console.dir(result);
     loadBalance();
   })

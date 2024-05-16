@@ -4,6 +4,8 @@ import HelloWorld from './components/HelloWorld.vue'
 /// wallet connect /////
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/vue'
 
+import titleImage from './assets/title.jpeg';
+
 const projectId = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID
 
 // 2. Set chains
@@ -50,11 +52,12 @@ const modal = createWeb3Modal({
 <template>
 
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="250" height="250" />
-
+    <v-img alt="Vue logo" :src="titleImage" cover width="250" class="bg-surface-variant rounded-circle mx-auto" />
     <div class="wrapper">
       <HelloWorld msg="Send your rewards." />
+      <!--
       <router-link to="/">wallet connect</router-link>
+      -->
     </div>
     
   </header>

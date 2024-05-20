@@ -95,8 +95,8 @@ const getContract = async() => {
     </v-row>
     <v-row no-gutters align="center" justify="center">
       <v-col cols="auto">
-        <span v-show="contractAmount > 0">MAX {{ contractAmount }} ETH can be transferred.</span>
-        <span v-show="contractAmount == 0">No Rewards for transfer.</span>
+        <span v-show="Number(contractAmount) > 0">MAX {{ contractAmount }} ETH can be transferred.</span>
+        <span v-show="Number(contractAmount) == 0">No Rewards for transfer.</span>
       </v-col>
     </v-row>
     <v-row align="center" justify="center">
